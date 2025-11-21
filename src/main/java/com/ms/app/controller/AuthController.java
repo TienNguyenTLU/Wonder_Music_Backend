@@ -4,6 +4,7 @@ import com.ms.app.dto.AuthResponse;
 import com.ms.app.dto.LoginRequest;
 import com.ms.app.dto.RegisterRequest;
 import com.ms.app.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,12 +18,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AuthResponse register(@RequestBody RegisterRequest req) {
+    public AuthResponse register(@RequestBody @Valid RegisterRequest req) {
         return service.register(req);
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest req) {
+    public AuthResponse login(@RequestBody @Valid LoginRequest req) {
         return service.login(req);
     }
 }

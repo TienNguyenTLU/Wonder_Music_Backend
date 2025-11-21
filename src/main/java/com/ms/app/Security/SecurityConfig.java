@@ -1,4 +1,4 @@
-package com.ms.app.config;
+package com.ms.app.Security;
 
 import com.ms.app.Security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
