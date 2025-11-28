@@ -16,7 +16,7 @@ public class Song {
     private String description;
     private String fileUrl;
     private String coverUrl;
-    private Integer duration;
+    private Double duration;
     private String status;
     private LocalDateTime createdAt;
     @ManyToOne
@@ -28,8 +28,4 @@ public class Song {
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private Genre genre;
-    @OneToMany(mappedBy = "song")
-    private List<PlaylistSong> playlistSongs;
-    @OneToMany(mappedBy = "song")
-    private List<History> history;
 }

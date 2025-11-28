@@ -5,6 +5,5 @@ import java.util.List;
 
 public interface PlaylistSongRepository extends JpaRepository<PlaylistSong, Long> {
     List<PlaylistSong> findByPlaylistId(Long playlistId);
-    List<PlaylistSong> findBySongId(Long songId);
     void deleteByPlaylistIdAndSongId(Long playlistId, Long songId);
 }

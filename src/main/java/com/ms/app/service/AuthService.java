@@ -22,23 +22,18 @@ public class AuthService {
         this.encoder = encoder;
         this.jwtService = jwtService;
     }
-
     public AuthResponse register(RegisterRequest req) {
         if (userRepo.existsByUsername(req.getUsername()))
             throw new RuntimeException("Username already exists");
-
         if (userRepo.existsByEmail(req.getEmail()))
             throw new RuntimeException("Email already exists");
-
         User u = new User();
         u.setUsername(req.getUsername());
         u.setEmail(req.getEmail());
         u.setPassword(encoder.encode(req.getPassword()));
         u.setRole("USER");
         u.setCreatedAt(LocalDateTime.now());
-
         userRepo.save(u);
-
         return new AuthResponse(jwtService.generateToken(u.getUsername()));
     }
 

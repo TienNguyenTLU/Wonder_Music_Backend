@@ -19,10 +19,4 @@ public class User {
     private String role;
     private String avatarUrl;
     private LocalDateTime createdAt;
-    @OneToMany(mappedBy = "user")
-    private List<Song> songs;
-    @OneToMany(mappedBy = "user")
-    private List<Playlist> playlists;
-    @OneToMany(mappedBy = "user")
-    private List<History> history;
 }

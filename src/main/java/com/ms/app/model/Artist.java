@@ -20,7 +20,5 @@ public class Artist {
     private String bio;
     private String avatarUrl;
     private LocalDateTime createdAt;
-    @OneToMany(mappedBy = "artist")
-    private List<Song> songs;
 }
 

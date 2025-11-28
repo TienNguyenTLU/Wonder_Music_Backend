@@ -19,8 +19,10 @@ public class SongDTO {
     private String description;
     private String fileUrl;
     private String coverUrl;
-    private Integer duration;
-    private User user;
-    private Artist artist;
-    private Genre genre;
+    private Double duration;
+    private Long userId;
+    @NotBlank(message = "Artist is required")
+    private Long artistId;
+    @NotBlank(message = "Genre is required")
+    private Long genreId;
 }

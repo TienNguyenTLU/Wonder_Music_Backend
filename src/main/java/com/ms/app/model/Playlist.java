@@ -24,6 +24,4 @@ public class Playlist {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany(mappedBy = "playlist")
-    private List<PlaylistSong> playlistSongs;
 }
