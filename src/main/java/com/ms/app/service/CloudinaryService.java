@@ -24,10 +24,29 @@ public class CloudinaryService {
                         "folder", "music_app_mp3" // Tên thư mục trên Cloudinary
                 ));
     }
-
-    // Hàm xóa file (nếu cần)
     public Map deleteFile(String publicId) throws IOException {
         return cloudinary.uploader().destroy(publicId,
                 ObjectUtils.asMap("resource_type", "video")); // MP3 thường được xếp vào nhóm video/raw
+    }
+    public String extractPublicID(String url) {
+        if (url == null || url.isEmpty()) return "";
+        try {
+            int uploadIndex = url.indexOf("upload/");
+            if (uploadIndex == -1) return "";
+            String p = url.substring(uploadIndex + 7);
+            if (p.startsWith("v")) {
+                int slashIndex = p.indexOf("/");
+                if (slashIndex != -1) {
+                    p = p.substring(slashIndex + 1);
+                }
+            }
+            int dotIndex = p.lastIndexOf(".");
+            if (dotIndex != -1) {
+                p = p.substring(0, dotIndex);
+            }
+            return p;
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

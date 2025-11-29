@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface SongService {
     Song create(SongDTO song, MultipartFile mp3File, MultipartFile imageFile) throws IOException;
-    void delete(Long id);
+    void delete(Long id) throws IOException;
     List<Song> findAll();
     Song findById(Long id);
 }

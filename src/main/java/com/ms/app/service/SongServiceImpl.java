@@ -81,11 +81,25 @@ public class SongServiceImpl implements SongService {
         song.setStatus("ACTIVE");
         return songRepo.save(song);
     }
-    public void delete(Long id) {
+    @Override
+    public void delete(Long id) throws IOException{
         Song song = songRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Song not found"));
-        song.setStatus("DELETED");
-        songRepo.save(song);
+        try {
+            String fileURL = song.getFileUrl();
+            String publicID = cloudinaryService.extractPublicID(fileURL);
+            cloudinaryService.deleteFile(publicID);
+        } catch (IOException e) {
+            System.err.println("Error deleting file from Cloudinary: " + e.getMessage());
+        }
+        try {
+            String coverURL = song.getCoverUrl();
+            String coverPublicID = cloudinaryService.extractPublicID(coverURL);
+            cloudinaryService.deleteFile(coverPublicID);
+        } catch (IOException e) {
+            System.err.println("Error deleting cover file from Cloudinary: " + e.getMessage());
+        }
+        songRepo.delete(song);
     }
     public Song findById(Long id) {
         return songRepo.findById(id)

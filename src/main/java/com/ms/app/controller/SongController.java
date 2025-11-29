@@ -33,7 +33,11 @@ public class SongController {
     }
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        service.delete(id);
+        try {
+            service.delete(id);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     @GetMapping
     public List<Song> all() {
