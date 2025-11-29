@@ -31,3 +31,15 @@ build/
 
 ### VS Code ###
 .vscode/
+### Security & Secrets ###
+.env
+.env.local
+*.key
+*.pem
+*.p12
+*.jks
+
+# Spring Boot Local Configuration (Nên dùng cách này)
+application-secret.properties
+application-dev.properties
+application-local.properties
