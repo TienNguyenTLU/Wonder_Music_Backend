@@ -95,7 +95,7 @@ public class SongServiceImpl implements SongService {
         try {
             String coverURL = song.getCoverUrl();
             String coverPublicID = cloudinaryService.extractPublicID(coverURL);
-            cloudinaryService.deleteFile(coverPublicID);
+            cloudinaryService.deleteImage(coverPublicID);
         } catch (IOException e) {
             System.err.println("Error deleting cover file from Cloudinary: " + e.getMessage());
         }

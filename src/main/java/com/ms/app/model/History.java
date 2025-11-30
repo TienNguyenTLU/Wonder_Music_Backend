@@ -14,10 +14,10 @@ public class History {
     private Long id;
     private LocalDateTime listenedAt;
     private Integer durationListened;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "song_id")
     private Song song;
 }

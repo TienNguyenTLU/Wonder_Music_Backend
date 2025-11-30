@@ -7,13 +7,10 @@ import java.util.List;
 
 @Service
 public class GenreServiceImpl implements GenreService {
-
     private final GenreRepository repo;
-
     public GenreServiceImpl(GenreRepository repo) {
         this.repo = repo;
     }
-
     @Override
     public Genre create(GenreDTO genre) {
         Genre newGenre = new Genre();

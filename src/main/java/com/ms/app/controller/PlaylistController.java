@@ -4,6 +4,7 @@ import com.ms.app.dto.PlaylistDTO;
 import com.ms.app.model.Playlist;
 import com.ms.app.service.PlaylistService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class PlaylistController {
     }
 
     @PostMapping
-    public Playlist create(@RequestBody PlaylistDTO playlist) {
-        return service.create(playlist);
+    public Playlist create(@RequestBody PlaylistDTO playlist, MultipartFile coverFile, MultipartFile wallpaperFile) {
+        return service.create(playlist, coverFile, wallpaperFile);
     }
 
     @PutMapping("/{id}")

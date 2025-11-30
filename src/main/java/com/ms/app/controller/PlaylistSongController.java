@@ -1,5 +1,6 @@
 package com.ms.app.controller;
 
+import com.ms.app.dto.PlaylistSongDTO;
 import com.ms.app.model.PlaylistSong;
 import com.ms.app.service.PlaylistSongService;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class PlaylistSongController {
     }
 
     @PostMapping
-    public PlaylistSong add(@RequestBody PlaylistSong ps) {
+    public PlaylistSong add(@RequestBody PlaylistSongDTO ps) {
         return service.addSong(ps);
     }
 
