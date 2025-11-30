@@ -2,6 +2,7 @@ package com.ms.app.Security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -9,13 +10,8 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-
-    private final String SECRET_KEY = generateSecretKey();
-    public String generateSecretKey() {
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-        System.out.println("JWT Secret = " + Encoders.BASE64.encode(key.getEncoded()));
-        return Encoders.BASE64.encode(key.getEncoded());
-    }
+    @Value("${application.security.jwt.secret-key}")
+    private String SECRET_KEY;
     private Key getSignKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }

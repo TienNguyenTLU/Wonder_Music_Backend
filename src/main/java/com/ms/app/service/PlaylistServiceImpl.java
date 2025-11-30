@@ -39,12 +39,23 @@ public class PlaylistServiceImpl implements PlaylistService {
         return repo.save(play);
     }
     @Override
-    public Playlist update(Long id, PlaylistDTO playlist) {
+    public Playlist update(Long id, PlaylistDTO playlist, MultipartFile coverFile, MultipartFile wallpaperFile) {
         Playlist old = repo.findById(id).orElseThrow();
         old.setName(playlist.getName());
         old.setDescription(playlist.getDescription());
-        old.setCoverUrl(playlist.getCoverUrl());
-        old.setWallpaperUrl(playlist.getWallpaperUrl());
+        try {
+            Map coverData = cloudinaryService.uploadImage(coverFile);
+            old.setCoverUrl((String) coverData.get("url"));
+        } catch (IOException e) {
+            System.err.println("Error uploading cover file to Cloudinary: " + e.getMessage());
+        }
+        try {
+            Map wallpaperData = cloudinaryService.uploadWallpaper(wallpaperFile);
+            old.setWallpaperUrl((String) wallpaperData.get("url"));
+        } catch (IOException e) {
+            System.err.println("Error uploading wallpaper file to Cloudinary: " + e.getMessage());
+        }
+        old.setIsPublic(playlist.getIsPublic());
         return repo.save(old);
     }
     @Override

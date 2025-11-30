@@ -30,6 +30,7 @@ public class AuthService {
         User u = new User();
         u.setUsername(req.getUsername());
         u.setEmail(req.getEmail());
+        u.setDisplayname(req.getDisplayname());
         u.setPassword(encoder.encode(req.getPassword()));
         u.setRole("USER");
         u.setCreatedAt(LocalDateTime.now());

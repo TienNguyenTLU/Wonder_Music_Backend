@@ -22,10 +22,9 @@ public class PlaylistController {
     public Playlist create(@RequestBody PlaylistDTO playlist, MultipartFile coverFile, MultipartFile wallpaperFile) {
         return service.create(playlist, coverFile, wallpaperFile);
     }
-
     @PutMapping("/{id}")
-    public Playlist update(@PathVariable Long id, @RequestBody PlaylistDTO playlist) {
-        return service.update(id, playlist);
+    public Playlist update(@PathVariable Long id, @RequestBody PlaylistDTO playlist, MultipartFile coverFile, MultipartFile wallpaperFile) {
+        return service.update(id, playlist, coverFile, wallpaperFile);
     }
 
     @DeleteMapping("/{id}")

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PlaylistService {
     Playlist create(PlaylistDTO playlist, MultipartFile coverFile, MultipartFile wallpaperFile);
-    Playlist update(Long id, PlaylistDTO playlist);
+    Playlist update(Long id, PlaylistDTO playlist, MultipartFile coverFile, MultipartFile wallpaperFile);
     void delete(Long id);
     List<Playlist> findAll();
     Playlist findById(Long id);
