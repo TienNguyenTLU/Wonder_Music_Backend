@@ -5,7 +5,9 @@ import com.ms.app.model.Genre;
 import com.ms.app.service.ArtistService;
 import com.ms.app.service.GenreService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 @RestController
 @RequestMapping("/api/genres")
@@ -18,8 +20,12 @@ public class GenreController {
     }
 
     @PostMapping
-    public Genre create(@RequestBody GenreDTO genre) {
-        return service.create(genre);
+    public Genre create(@RequestBody GenreDTO genre, @RequestParam("image") MultipartFile image) {
+        try {
+            return service.create(genre, image);
+        } catch (IOException e) {
+            throw new RuntimeException("Error creating genre", e);
+        }
     }
 
     @PutMapping("/{id}")

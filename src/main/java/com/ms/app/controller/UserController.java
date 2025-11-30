@@ -38,6 +38,7 @@ public class UserController {
         }
         User currentUser = (User) authentication.getPrincipal();
         UserDTO response = new UserDTO();
+        response.setDisplayname(currentUser.getDisplayname());
         response.setEmail(currentUser.getEmail());
         response.setAvatarUrl(currentUser.getAvatarUrl());
         return ResponseEntity.ok(response);

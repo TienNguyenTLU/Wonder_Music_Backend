@@ -21,7 +21,7 @@ public class Playlist {
     private String wallpaperUrl;
     private Boolean isPublic;
     private LocalDateTime createdAt;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 }

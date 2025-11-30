@@ -3,19 +3,29 @@ import com.ms.app.dto.GenreDTO;
 import com.ms.app.model.Genre;
 import com.ms.app.repository.GenreRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GenreServiceImpl implements GenreService {
     private final GenreRepository repo;
-    public GenreServiceImpl(GenreRepository repo) {
+    private final CloudinaryService cloudinaryService;
+    public GenreServiceImpl(GenreRepository repo, CloudinaryService cloudinaryService) {
         this.repo = repo;
+        this.cloudinaryService = cloudinaryService;
     }
     @Override
-    public Genre create(GenreDTO genre) {
+    public Genre create(GenreDTO genre, MultipartFile image) throws IOException {
         Genre newGenre = new Genre();
         newGenre.setName(genre.getName());
         newGenre.setDescription(genre.getDescription());
+        if (genre.getImageUrl() != null) {
+            Map result = cloudinaryService.uploadImage(image);
+            newGenre.setImageUrl(result.get("url").toString());
+        }
         return repo.save(newGenre);
     }
 
