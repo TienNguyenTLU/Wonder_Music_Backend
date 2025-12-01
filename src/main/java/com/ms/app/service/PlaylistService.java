@@ -1,5 +1,6 @@
 package com.ms.app.service;
 
+import com.ms.app.dto.PlayListSongResponse;
 import com.ms.app.dto.PlaylistDTO;
 import com.ms.app.model.Playlist;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,4 +15,5 @@ public interface PlaylistService {
     List<Playlist> findAll();
     Playlist findById(Long id);
     List<Playlist> findByUserId();
+    List<PlayListSongResponse> getSongsInPlaylist(Long playlistId);
 }

@@ -24,6 +24,8 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final GenreRepository genreRepository;
     private final PlaylistRepository playlistRepository;
     private final SongRepository songRepository;
+    // Thêm Repository bảng trung gian để liên kết Playlist và Song
+    private final PlaylistSongRepository playlistSongRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -33,6 +35,10 @@ public class DatabaseSeeder implements CommandLineRunner {
         if (artistRepository.count() == 0) seedArtists();
         if (songRepository.count() == 0) seedSongs();
         if (playlistRepository.count() == 0) seedPlaylists();
+
+        // Thêm bước seed bài hát vào playlist (chạy cuối cùng)
+        if (playlistSongRepository.count() == 0) seedPlaylistSongs();
+
         System.out.println(">>> SEEDING DATA COMPLETED");
     }
 
@@ -85,7 +91,6 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private void seedArtists() {
         System.out.println("Seeding Artists...");
-        // Dữ liệu Artist đã được tách ra ArtistData để gọn code
         List<ArtistData> dataList = getArtistDataList();
 
         List<Artist> artists = new ArrayList<>();
@@ -108,18 +113,13 @@ public class DatabaseSeeder implements CommandLineRunner {
         List<Artist> artists = artistRepository.findAll();
         List<Genre> genres = genreRepository.findAll();
         Random random = new Random();
-
-        // Sử dụng helper method để lấy danh sách bài hát (Đảm bảo đủ 15 bài)
         List<SongData> songDataList = getSongDataList();
 
         List<Song> songs = new ArrayList<>();
 
-        // Loop an toàn: Dựa trên số lượng bài hát đã định nghĩa
-        // Giả định thứ tự Artist khớp với thứ tự bài hát (1-1)
         for (int i = 0; i < songDataList.size(); i++) {
             SongData data = songDataList.get(i);
-
-            // Nếu index vượt quá số lượng Artist, quay vòng lại Artist đầu tiên (tránh lỗi IndexOutOfBounds)
+            // Lấy artist tương ứng, nếu hết list thì quay vòng
             Artist artist = artists.get(i % artists.size());
             Genre genre = genres.get(random.nextInt(genres.size()));
 
@@ -130,7 +130,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             s.setUser(user);
             s.setGenre(genre);
             s.setFileUrl(data.getUrl());
-            s.setCoverUrl(artist.getAvatarUrl()); // Dùng avatar artist làm cover
+            s.setCoverUrl(artist.getAvatarUrl());
             s.setDuration(240.0);
             s.setStatus("ACTIVE");
             s.setCreatedAt(LocalDateTime.now());
@@ -166,7 +166,43 @@ public class DatabaseSeeder implements CommandLineRunner {
         playlistRepository.saveAll(playlists);
     }
 
-    // --- DATA HELPERS (Tách dữ liệu ra cho gọn hàm main) ---
+    // --- MỚI: HÀM THÊM BÀI HÁT VÀO PLAYLIST ---
+    private void seedPlaylistSongs() {
+        System.out.println("Seeding Playlist Songs (2 songs per playlist)...");
+        List<Playlist> playlists = playlistRepository.findAll();
+        List<Song> songs = songRepository.findAll();
+
+        if (playlists.isEmpty() || songs.size() < 2) return;
+
+        Random random = new Random();
+        List<PlaylistSong> linksToSave = new ArrayList<>();
+
+        for (Playlist playlist : playlists) {
+            // Chọn ngẫu nhiên 2 bài hát khác nhau
+            Song song1 = songs.get(random.nextInt(songs.size()));
+            Song song2;
+            do {
+                song2 = songs.get(random.nextInt(songs.size()));
+            } while (song2.getId().equals(song1.getId())); // Đảm bảo không trùng
+
+            // Tạo liên kết 1
+            PlaylistSong link1 = new PlaylistSong();
+            link1.setPlaylist(playlist);
+            link1.setSong(song1);
+            link1.setAddedAt(LocalDateTime.now());
+            linksToSave.add(link1);
+
+            // Tạo liên kết 2
+            PlaylistSong link2 = new PlaylistSong();
+            link2.setPlaylist(playlist);
+            link2.setSong(song2);
+            link2.setAddedAt(LocalDateTime.now().plusMinutes(1)); // Thêm sau 1 chút
+            linksToSave.add(link2);
+        }
+        playlistSongRepository.saveAll(linksToSave);
+    }
+
+    // --- DATA HELPERS ---
 
     private List<ArtistData> getArtistDataList() {
         return Arrays.asList(
@@ -189,7 +225,6 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     private List<SongData> getSongDataList() {
-        // Đã bổ sung URL cho bài hát thứ 15 của Taylor Swift để tránh lỗi IndexOutOfBound
         return Arrays.asList(
                 new SongData("Une vie taimer", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516721/Clair_Obscur_Expedition_33_Original_Soundtrack_60_Une_vie_%C3%A0_t_aimer_rnimpm.mp3"),
                 new SongData("Faded", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516712/Alan_Walker_Faded_ngo7mz.mp3"),
@@ -201,11 +236,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                 new SongData("Uchiage Hanabi", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516717/Uchiage_Hanabi_syazyu.mp3"),
                 new SongData("Lemon", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516716/Lemon_kkutty.mp3"),
                 new SongData("Lạc Trôi", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516714/Lac_Troi_qaqn0s.mp3"),
-                new SongData("Mang Tiền Về Cho Mẹ", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516719/Loi_Nho_z9baie.mp3"), // Link tạm của Đen
-                new SongData("Vùng Ký Ức", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516719/Loi_Nho_z9baie.mp3"), // Link tạm Chillies
+                new SongData("Mang Tiền Về Cho Mẹ", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516719/Loi_Nho_z9baie.mp3"),
+                new SongData("Vùng Ký Ức", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516719/Loi_Nho_z9baie.mp3"),
                 new SongData("Dynamite", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516713/BTS_Dynamite_idjupt.mp3"),
                 new SongData("How You Like That", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516711/How_you_like_that_actgsx.mp3"),
-                new SongData("Love Story", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516710/Taylor_Swift_Love_Story_zy28j1.mp3") // Đã thêm
+                new SongData("Love Story", "https://res.cloudinary.com/dtnonjckn/video/upload/v1764516710/Taylor_Swift_Love_Story_zy28j1.mp3")
         );
     }
 

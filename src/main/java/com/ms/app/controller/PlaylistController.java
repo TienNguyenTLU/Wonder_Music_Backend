@@ -1,5 +1,6 @@
 package com.ms.app.controller;
 
+import com.ms.app.dto.PlayListSongResponse;
 import com.ms.app.dto.PlaylistDTO;
 import com.ms.app.model.Playlist;
 import com.ms.app.service.PlaylistService;
@@ -53,5 +54,9 @@ public class PlaylistController {
     @GetMapping("/me")
     public ResponseEntity<List<Playlist>> getByUser() {
         return ResponseEntity.ok(service.findByUserId());
+    }
+    @GetMapping("/{id}/songs")
+    public ResponseEntity<List<PlayListSongResponse>> getSongsByPlaylist(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getSongsInPlaylist(id));
     }
 }

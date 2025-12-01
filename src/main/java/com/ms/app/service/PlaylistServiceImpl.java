@@ -1,9 +1,12 @@
 package com.ms.app.service;
 
+import com.ms.app.dto.PlayListSongResponse;
 import com.ms.app.dto.PlaylistDTO;
 import com.ms.app.model.Playlist;
+import com.ms.app.model.PlaylistSong;
 import com.ms.app.model.User;
 import com.ms.app.repository.PlaylistRepository;
+import com.ms.app.repository.PlaylistSongRepository;
 import com.ms.app.repository.UsersRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,16 +17,19 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaylistServiceImpl implements PlaylistService {
     private final PlaylistRepository repo;
     private final CloudinaryService cloudinaryService;
     private final UsersRepository userRepository;
-    public PlaylistServiceImpl(PlaylistRepository repo, CloudinaryService cloudinaryService, UsersRepository userRepository) {
+    private final PlaylistSongRepository playlistSongRepo;
+    public PlaylistServiceImpl(PlaylistRepository repo, CloudinaryService cloudinaryService, UsersRepository userRepository, PlaylistSongRepository playlistSongRepo) {
         this.repo = repo;
         this.cloudinaryService = cloudinaryService;
         this.userRepository = userRepository;
+        this.playlistSongRepo = playlistSongRepo;
     }
     @Override
     public Playlist create(PlaylistDTO playlist, MultipartFile coverFile, MultipartFile wallpaperFile) {
@@ -106,5 +112,13 @@ public class PlaylistServiceImpl implements PlaylistService {
                     .orElseThrow(() -> new RuntimeException("User not found: " + email));
         }
         return repo.findByUserId(current_User.getId());
+    }
+    @Override
+    public List<PlayListSongResponse> getSongsInPlaylist(Long playlistId) {
+        // 1. Lấy List<PlaylistSong> từ DB (Dạng Entity + Proxy)
+        List<PlaylistSong> entities = playlistSongRepo.findByPlaylistId(playlistId);
+        return entities.stream()
+                .map(PlayListSongResponse::fromEntity) // Gọi hàm mapper static ta vừa viết
+                .collect(Collectors.toList());
     }
 }
