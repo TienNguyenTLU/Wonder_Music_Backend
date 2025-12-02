@@ -26,6 +26,10 @@ public class PlaylistSongController {
     public void remove(@PathVariable Long playlistId, @PathVariable Long songId) {
         service.removeSong(playlistId, songId);
     }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.deleteById(id);
+    }
 
     @GetMapping("/playlist/{id}")
     public List<PlaylistSong> getByPlaylist(@PathVariable Long id) {

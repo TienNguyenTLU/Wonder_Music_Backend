@@ -37,7 +37,10 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
     public void removeSong(Long playlistId, Long songId) {
         repo.deleteByPlaylistIdAndSongId(playlistId, songId);
     }
-
+    @Override
+    public void deleteById(Long id) {
+        repo.deleteById(id);
+    }
     @Override
     public List<PlaylistSong> findByPlaylist(Long id) {
         return repo.findByPlaylistId(id);
