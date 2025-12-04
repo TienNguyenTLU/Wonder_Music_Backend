@@ -75,6 +75,8 @@ public class SongServiceImpl implements SongService {
         else {
             song.setCoverUrl("https://res.cloudinary.com/dvq3h3h3h/image/upload/v1724244000/default_cover.jpg");
         }
+        song.setGenre(genreRepo.findById(dto.getGenreId())
+                .orElseThrow(() -> new RuntimeException("Genre not found")));
         song.setTitle(dto.getTitle());
         song.setDescription(dto.getDescription());
         song.setCreatedAt(LocalDateTime.now());
@@ -106,7 +108,19 @@ public class SongServiceImpl implements SongService {
                 .orElseThrow(() -> new RuntimeException("Song not found"));
     }
     @Override
+    public List<Song> findByUserId(Long userId) {
+        return songRepo.findByUserId(userId);
+    }
+    @Override
+    public List<Song> findByUsername(String username) {
+        return songRepo.findByUserUsername(username);
+    }
+    @Override
     public List<Song> findAll() {
             return songRepo.findAll();
+    }
+    public List<Song> findByGenreId(Long id)
+    {
+        return songRepo.findByGenreId(id);
     }
 }

@@ -12,4 +12,7 @@ public interface SongService {
     void delete(Long id) throws IOException;
     List<Song> findAll();
     Song findById(Long id);
+    List<Song> findByUserId(Long userId);
+    List<Song> findByUsername(String username);
+    List<Song> findByGenreId (Long id);
 }

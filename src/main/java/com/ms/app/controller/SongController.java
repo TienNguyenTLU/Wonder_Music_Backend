@@ -47,4 +47,17 @@ public class SongController {
     public Song get(@PathVariable Long id) {
         return service.findById(id);
     }
+    @GetMapping("/user_id/{userId}")
+    public List<Song> getByUserId(@PathVariable Long userId) {
+        return service.findByUserId(userId);
+    }
+    @GetMapping("/user/{username}")
+    public List<Song> getByUsername(@PathVariable String username) {
+        return service.findByUsername(username);
+    }
+    @GetMapping("/genre/{id}")
+    public List<Song> getByGenreId(@PathVariable Long id)
+    {
+        return service.findByGenreId(id);
+    }
 }
