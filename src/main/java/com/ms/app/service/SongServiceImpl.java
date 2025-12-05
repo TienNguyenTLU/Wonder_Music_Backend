@@ -123,4 +123,8 @@ public class SongServiceImpl implements SongService {
     {
         return songRepo.findByGenreId(id);
     }
+    @Override
+    public List<Song> findByArtistId(Long id) {
+        return songRepo.findByArtistId(id);
+    }
 }

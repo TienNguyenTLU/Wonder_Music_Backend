@@ -60,4 +60,8 @@ public class SongController {
     {
         return service.findByGenreId(id);
     }
+    @GetMapping("/artist/{id}")
+    public List<Song> getByArtistId(@PathVariable Long id) {
+        return service.findByArtistId(id);
+    }
 }

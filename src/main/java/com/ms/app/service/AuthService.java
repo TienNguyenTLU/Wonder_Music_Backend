@@ -35,7 +35,7 @@ public class AuthService {
         u.setRole("USER");
         u.setCreatedAt(LocalDateTime.now());
         userRepo.save(u);
-        return new AuthResponse(jwtService.generateToken(u.getUsername()));
+        return new AuthResponse(jwtService.generateToken(u.getUsername(), u.getId()));
     }
 
     public AuthResponse login(LoginRequest req) {
@@ -45,6 +45,6 @@ public class AuthService {
         if (!encoder.matches(req.getPassword(), u.getPassword()))
             throw new RuntimeException("Invalid credentials");
 
-        return new AuthResponse(jwtService.generateToken(u.getUsername()));
+        return new AuthResponse(jwtService.generateToken(u.getUsername(), u.getId()));
     }
 }

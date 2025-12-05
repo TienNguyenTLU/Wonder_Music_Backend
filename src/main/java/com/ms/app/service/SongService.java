@@ -15,4 +15,5 @@ public interface SongService {
     List<Song> findByUserId(Long userId);
     List<Song> findByUsername(String username);
     List<Song> findByGenreId (Long id);
+    List<Song> findByArtistId(Long id);
 }
